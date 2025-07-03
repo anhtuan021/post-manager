@@ -11,10 +11,16 @@ interface MongooseGlobal {
   promise: Promise<typeof mongoose> | null;
 }
 
-let cached = (global as any).mongoose as MongooseGlobal;
+// Extend NodeJS.Global with mongoose property
+declare global {
+  // eslint-disable-next-line no-var
+  var mongoose: MongooseGlobal | undefined;
+}
+
+let cached = global.mongoose;
 
 if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
 async function dbConnect() {
